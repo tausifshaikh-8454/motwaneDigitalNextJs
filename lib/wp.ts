@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { cacheLife, cacheTag } from "next/cache";
 import type {
   BlogSettings,
@@ -19,9 +19,75 @@ import type {
  */
 export const wp = axios.create({
   baseURL: process.env.WP_API_URL,
-  timeout: 15000,
+  timeout: 20000,
   headers: { Accept: "application/json" },
 });
+
+/*
+ * Protect the WordPress host (shared hosting has a small database connection limit):
+ * - at most MAX_PARALLEL requests are sent at the same time (the build renders many pages at once);
+ * - GET requests that fail with a server error, 429, timeout or network error are retried
+ *   with a growing pause (1s, 2s, 4s, 8s) before giving up.
+ */
+const MAX_PARALLEL = 4;
+const MAX_RETRIES = 4;
+let active = 0;
+const waiting: (() => void)[] = [];
+
+function acquire(): Promise<void> {
+  if (active < MAX_PARALLEL) {
+    active++;
+    return Promise.resolve();
+  }
+  return new Promise((resolve) =>
+    waiting.push(() => {
+      active++;
+      resolve();
+    }),
+  );
+}
+
+function release() {
+  active = Math.max(0, active - 1);
+  waiting.shift()?.();
+}
+
+type RetryConfig = InternalAxiosRequestConfig & { _retry?: number; _slot?: boolean };
+
+wp.interceptors.request.use(async (config: RetryConfig) => {
+  await acquire();
+  config._slot = true;
+  return config;
+});
+
+wp.interceptors.response.use(
+  (response) => {
+    const config = response.config as RetryConfig;
+    if (config._slot) {
+      config._slot = false;
+      release();
+    }
+    return response;
+  },
+  async (error: AxiosError) => {
+    const config = error.config as RetryConfig | undefined;
+    if (config?._slot) {
+      config._slot = false;
+      release();
+    }
+    const status = error.response?.status;
+    const retryable = !status || status >= 500 || status === 429;
+    if (config && (config.method ?? "get").toLowerCase() === "get" && retryable) {
+      const attempt = (config._retry ?? 0) + 1;
+      if (attempt <= MAX_RETRIES) {
+        config._retry = attempt;
+        await new Promise((r) => setTimeout(r, 1000 * 2 ** (attempt - 1)));
+        return wp.request(config);
+      }
+    }
+    throw error;
+  },
+);
 
 /** Cache tag used by /api/revalidate to refresh all WordPress data. */
 export const WP_CACHE_TAG = "wp";
@@ -259,6 +325,11 @@ export async function getSitemapItems(): Promise<SitemapItem[]> {
     blog: "/blog/",
     webinars: "/webinars/",
     "contact-us": "/contact-us/",
+    "about-us": "/about-us/",
+    careers: "/careers/",
+    "apply-now": "/apply-now/",
+    "terms-and-conditions": "/terms-and-conditions/",
+    "privacy-policy": "/privacy-policy/",
   };
 
   return [

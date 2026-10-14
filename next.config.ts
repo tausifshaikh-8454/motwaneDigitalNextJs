@@ -24,6 +24,16 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   poweredByHeader: false,
 
+  /**
+   * Build gently: WordPress is on shared hosting, which runs out of database
+   * connections if too many pages are rendered at the same time.
+   */
+  experimental: {
+    cpus: 2,
+    staticGenerationMaxConcurrency: 2,
+    staticGenerationRetryCount: 3,
+  },
+
   /** Old WordPress (Yoast) URLs that search engines may still request. */
   async redirects() {
     return [

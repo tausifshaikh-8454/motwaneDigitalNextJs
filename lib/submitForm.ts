@@ -26,3 +26,25 @@ export async function submitForm(
     return { ok: false, message: "Network error. Please check your connection and try again." };
   }
 }
+
+/** Same as submitForm, but sends multipart/form-data so a file (e.g. a resume) can be attached. */
+export async function submitFormWithFile(
+  formType: FormType,
+  data: Record<string, string>,
+  files: Record<string, File>,
+  honeypot: string,
+): Promise<SubmitResult> {
+  const fd = new FormData();
+  fd.append("formType", formType);
+  fd.append("website", honeypot);
+  if (typeof window !== "undefined") fd.append("pageUrl", window.location.href);
+  for (const [key, value] of Object.entries(data)) fd.append(key, value ?? "");
+  for (const [key, file] of Object.entries(files)) fd.append(key, file, file.name);
+  try {
+    const res = await axios.post<SubmitResult>("/api/forms/", fd);
+    return res.data;
+  } catch (err) {
+    if (axios.isAxiosError(err) && err.response?.data) return err.response.data as SubmitResult;
+    return { ok: false, message: "Network error. Please check your connection and try again." };
+  }
+}

@@ -306,3 +306,48 @@ export interface ContactAcf {
   submit_label: string;
   success_message: string;
 }
+
+/** About Us page (WordPress page: about-us) */
+export interface AboutAcf {
+  hero_eyebrow: string;
+  hero_title: string;
+  hero_text: string;
+  hero_image: WPImage | false | null;
+  story_image: WPImage | false | null;
+  story_eyebrow: string;
+  /** May contain <br /> line breaks */
+  story_heading: string;
+  story_text: string;
+  story_link: WPLink | null | "";
+  timeline_eyebrow: string;
+  timeline_heading: string;
+  timeline_line: WPImage | false | null;
+  timeline: { icon: WPImage | false | null; year: string; text: string }[] | null | false;
+}
+
+/** Careers page (WordPress page: careers) */
+export interface CareersAcf {
+  hero_title: string;
+  hero_subtitle: string;
+  hero_text: string;
+  hero_button: WPLink | null | "";
+  ethics_image: WPImage | false | null;
+  ethics_eyebrow: string;
+  /** May contain <br /> line breaks */
+  ethics_heading: string;
+  ethics_text: string;
+  openings_heading: string;
+  apply_label: string;
+  openings: { title: string; location: string; type: string; show: boolean }[] | null | false;
+}
+
+/** Apply Now page (WordPress page: apply-now) */
+export interface ApplyAcf {
+  hero_title: string;
+  hero_text: string;
+  hero_image: WPImage | false | null;
+  form_heading: string;
+  form_id: number | string | null;
+  submit_label: string;
+  success_message: string;
+}

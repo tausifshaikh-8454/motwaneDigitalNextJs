@@ -1,13 +1,16 @@
 import axios from "axios";
 import { z } from "zod";
-import { getContactSettings, getGlobalSettings, wp } from "@/lib/wp";
-import { buildSchema, FORM_TYPES, type FormType } from "@/lib/forms";
-import type { Cf7Response, GlobalSettings } from "@/types/wp";
+import { getContactSettings, getGlobalSettings, getPageBySlug, wp } from "@/lib/wp";
+import { buildSchema, FORM_TYPES, resumeError, type FormType } from "@/lib/forms";
+import type { ApplyAcf, Cf7Response, GlobalSettings } from "@/types/wp";
 
 /**
  * All site forms post here. The handler validates the input, then forwards it
  * to Contact Form 7 in WordPress (CFDB7 stores every entry in wp-admin).
  * The browser never talks to WordPress directly.
+ *
+ * Most forms send JSON. The job application sends multipart/form-data because
+ * it includes the resume file.
  */
 
 const requestSchema = z.object({
@@ -28,6 +31,11 @@ function rateLimited(ip: string) {
 }
 
 async function formIdFor(type: FormType, s: GlobalSettings | null): Promise<number | string | null> {
+  if (type === "job_application") {
+    // Set on the Apply Now page in WordPress.
+    const page = await getPageBySlug<ApplyAcf>("apply-now");
+    return page?.acf?.form_id || null;
+  }
   if (type === "contact") {
     // Contact Us page has its own form (set on the Contact Us page in WordPress).
     const contact = await getContactSettings();
@@ -47,6 +55,7 @@ async function formIdFor(type: FormType, s: GlobalSettings | null): Promise<numb
     case "product_enquiry":
       return s.product_enquiry?.form_id ?? null;
   }
+  return null;
 }
 
 export async function POST(request: Request) {
@@ -56,8 +65,25 @@ export async function POST(request: Request) {
   }
 
   let body: z.infer<typeof requestSchema>;
+  let file: File | null = null;
   try {
-    body = requestSchema.parse(await request.json());
+    if ((request.headers.get("content-type") ?? "").includes("multipart/form-data")) {
+      const form = await request.formData();
+      const data: Record<string, string> = {};
+      for (const [key, value] of form.entries()) {
+        if (typeof value === "string" && !["formType", "website", "pageUrl"].includes(key)) data[key] = value;
+      }
+      const upload = form.get("resume-file");
+      file = upload instanceof File ? upload : null;
+      body = requestSchema.parse({
+        formType: form.get("formType"),
+        data,
+        website: form.get("website") ?? undefined,
+        pageUrl: form.get("pageUrl") ?? undefined,
+      });
+    } else {
+      body = requestSchema.parse(await request.json());
+    }
   } catch {
     return Response.json({ ok: false, message: "Invalid request." }, { status: 400 });
   }
@@ -66,9 +92,15 @@ export async function POST(request: Request) {
   if (body.website) return Response.json({ ok: true, message: "" });
 
   const parsed = buildSchema(body.formType).safeParse(body.data);
+  const fieldErrors: Record<string, string> = {};
   if (!parsed.success) {
-    const fieldErrors: Record<string, string> = {};
     for (const issue of parsed.error.issues) fieldErrors[String(issue.path[0])] = issue.message;
+  }
+  if (body.formType === "job_application") {
+    const err = resumeError(file);
+    if (err) fieldErrors["resume-file"] = err;
+  }
+  if (!parsed.success || Object.keys(fieldErrors).length) {
     return Response.json({ ok: false, message: "Please check the highlighted fields.", fieldErrors }, { status: 422 });
   }
 
@@ -79,6 +111,7 @@ export async function POST(request: Request) {
 
   const fd = new FormData();
   for (const [key, value] of Object.entries(parsed.data)) if (value) fd.append(key, String(value));
+  if (file) fd.append("resume-file", file, file.name);
   fd.append("_wpcf7", String(formId));
   fd.append("_wpcf7_unit_tag", `wpcf7-f${formId}-o1`);
   fd.append("_wpcf7_container_post", "0");
