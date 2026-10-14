@@ -14,7 +14,7 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: PageProps<"/blog/page/[page]">): Promise<Metadata> {
   const { page } = await props.params;
   const wpPage = await getPageBySlug("blog");
-  const base = yoastToMetadata(wpPage?.yoast_head_json, "Blogs");
+  const base = yoastToMetadata(wpPage?.yoast_head_json, "Blogs", `/blog/page/${page}/`);
   return { ...base, title: `${String(base.title ?? "Blogs")} - Page ${page}` };
 }
 

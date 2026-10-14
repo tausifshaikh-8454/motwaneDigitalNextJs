@@ -20,7 +20,7 @@ export async function generateMetadata(props: PageProps<"/blog/[slug]">): Promis
   const { slug } = await props.params;
   const post = await getPostBySlug(slug);
   if (!post) return {};
-  return yoastToMetadata(post.yoast_head_json, decodeEntities(post.title.rendered));
+  return yoastToMetadata(post.yoast_head_json, decodeEntities(post.title.rendered), `/blog/${slug}/`);
 }
 
 const contentStyles = [

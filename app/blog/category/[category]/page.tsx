@@ -4,6 +4,7 @@ import { BlogListing } from "@/components/blog/BlogListing";
 import { getCategories } from "@/lib/wp";
 import { loadBlogListing } from "@/lib/blogListing";
 import { decodeEntities } from "@/lib/links";
+import { yoastToMetadata } from "@/lib/seo";
 
 export async function generateStaticParams() {
   const cats = await getCategories();
@@ -13,7 +14,7 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: PageProps<"/blog/category/[category]">): Promise<Metadata> {
   const { category } = await props.params;
   const cat = (await getCategories()).find((c) => c.slug === category);
-  return { title: cat ? `${decodeEntities(cat.name)} - Blogs` : "Blogs" };
+  return yoastToMetadata(cat?.yoast_head_json, cat ? `${decodeEntities(cat.name)} - Blogs` : "Blogs", `/blog/category/${category}/`);
 }
 
 async function Listing({ params }: Pick<PageProps<"/blog/category/[category]">, "params">) {

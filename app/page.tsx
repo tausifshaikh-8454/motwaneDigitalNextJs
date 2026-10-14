@@ -17,7 +17,7 @@ const HOME_SLUG = "home";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug<HomeAcf>(HOME_SLUG);
-  return yoastToMetadata(page?.yoast_head_json, page ? decodeEntities(page.title.rendered) : undefined);
+  return yoastToMetadata(page?.yoast_head_json, page ? decodeEntities(page.title.rendered) : undefined, "/");
 }
 
 function linkItem(link: WPLink | null | "" | undefined) {

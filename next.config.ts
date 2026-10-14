@@ -22,6 +22,31 @@ const nextConfig: NextConfig = {
   },
   partialPrefetching: true,
   trailingSlash: true,
+  poweredByHeader: false,
+
+  /** Old WordPress (Yoast) URLs that search engines may still request. */
+  async redirects() {
+    return [
+      { source: "/sitemap_index.xml", destination: "/sitemap.xml", permanent: true },
+      { source: "/:type(post|page|webinars)-sitemap.xml", destination: "/sitemap.xml", permanent: true },
+      { source: "/author/:slug*", destination: "/", permanent: true },
+    ];
+  },
+
+  /** Basic security headers for every page. */
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

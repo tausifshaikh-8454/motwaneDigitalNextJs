@@ -5,7 +5,7 @@ import { yoastToMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug("contact-us");
-  return yoastToMetadata(page?.yoast_head_json, "Contact Us");
+  return yoastToMetadata(page?.yoast_head_json, "Contact Us", "/contact-us/");
 }
 
 /** Contact Us page — all content comes from the WordPress page "contact-us". */

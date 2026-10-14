@@ -19,7 +19,7 @@ export async function generateMetadata(props: PageProps<"/[productSlug]">): Prom
   const { productSlug } = await props.params;
   const product = await getProductBySlug(productSlug);
   if (!product) return {};
-  return yoastToMetadata(product.yoast_head_json, decodeEntities(product.title.rendered));
+  return yoastToMetadata(product.yoast_head_json, decodeEntities(product.title.rendered), `/${productSlug}/`);
 }
 
 async function ProductContent({ params }: Pick<PageProps<"/[productSlug]">, "params">) {

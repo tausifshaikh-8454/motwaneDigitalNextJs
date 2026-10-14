@@ -6,7 +6,7 @@ import { yoastToMetadata } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug("blog");
-  return yoastToMetadata(page?.yoast_head_json, "Blogs");
+  return yoastToMetadata(page?.yoast_head_json, "Blogs", "/blog/");
 }
 
 export default async function BlogPage() {

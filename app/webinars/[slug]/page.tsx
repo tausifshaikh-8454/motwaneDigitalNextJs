@@ -21,7 +21,7 @@ export async function generateMetadata(props: PageProps<"/webinars/[slug]">): Pr
   const { slug } = await props.params;
   const webinar = await getWebinarBySlug(slug);
   if (!webinar) return {};
-  return yoastToMetadata(webinar.yoast_head_json, decodeEntities(webinar.title.rendered));
+  return yoastToMetadata(webinar.yoast_head_json, decodeEntities(webinar.title.rendered), `/webinars/${slug}/`);
 }
 
 const icon = "h-[23px] w-[23px] shrink-0 text-primary";

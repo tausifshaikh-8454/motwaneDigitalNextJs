@@ -9,6 +9,7 @@ import type {
   WPPage,
   WPPost,
   WPProduct,
+  WPSiteInfo,
   WPWebinar,
 } from "@/types/wp";
 
@@ -90,7 +91,7 @@ export async function getCategories(): Promise<WPCategory[]> {
   cacheLife("wordpress");
   cacheTag(WP_CACHE_TAG, "categories");
   const { data } = await wp.get<WPCategory[]>("/wp/v2/categories", {
-    params: { per_page: 100, hide_empty: true, orderby: "name", order: "asc", _fields: "id,name,slug,count" },
+    params: { per_page: 100, hide_empty: true, orderby: "name", order: "asc", _fields: "id,name,slug,count,yoast_head_json" },
   });
   return data.filter((c) => c.slug !== "uncategorized");
 }
@@ -197,4 +198,73 @@ export async function getContactSettings(): Promise<ContactAcf | null> {
   cacheTag(WP_CACHE_TAG, "contact");
   const page = await getPageBySlug<ContactAcf>("contact-us");
   return page?.acf ?? null;
+}
+
+/* ---------------------------------- Site ---------------------------------- */
+
+/** Site name, tagline and site icon (WordPress → Settings → General / Site Icon). */
+export async function getSiteInfo(): Promise<WPSiteInfo | null> {
+  "use cache";
+  cacheLife("wordpress");
+  cacheTag(WP_CACHE_TAG, "site");
+  try {
+    const { data } = await wp.get<WPSiteInfo>("/", { params: { _fields: "name,description,site_icon_url" } });
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export interface SitemapItem {
+  path: string;
+  /** Last change in UTC (WordPress "modified_gmt") */
+  modified?: string;
+}
+
+/** Every indexable URL on the site, built from WordPress (used by app/sitemap.ts). */
+export async function getSitemapItems(): Promise<SitemapItem[]> {
+  "use cache";
+  cacheLife("wordpress");
+  cacheTag(WP_CACHE_TAG, "sitemap");
+
+  type Row = { slug: string; modified_gmt: string; yoast_head_json?: { robots?: Record<string, string> } };
+  const fetchAll = async (endpoint: string): Promise<Row[]> => {
+    const rows: Row[] = [];
+    for (let page = 1; ; page++) {
+      try {
+        const res = await wp.get<Row[]>(endpoint, {
+          params: { per_page: 100, page, _fields: "slug,modified_gmt,yoast_head_json" },
+        });
+        rows.push(...res.data);
+        if (page >= Number(res.headers["x-wp-totalpages"] ?? 1)) break;
+      } catch (err) {
+        if (axios.isAxiosError(err) && err.response?.status === 400) break;
+        throw err;
+      }
+    }
+    // Leave out anything set to "noindex" in Yoast.
+    return rows.filter((r) => r.yoast_head_json?.robots?.index !== "noindex");
+  };
+
+  const [pages, products, posts, webinars] = await Promise.all([
+    fetchAll("/wp/v2/pages"),
+    fetchAll("/wp/v2/products"),
+    fetchAll("/wp/v2/posts"),
+    fetchAll("/wp/v2/webinars"),
+  ]);
+
+  // WordPress pages that exist as routes in this Next.js site.
+  const pageRoutes: Record<string, string> = {
+    home: "/",
+    blog: "/blog/",
+    webinars: "/webinars/",
+    "contact-us": "/contact-us/",
+  };
+
+  return [
+    ...pages.filter((p) => pageRoutes[p.slug]).map((p) => ({ path: pageRoutes[p.slug], modified: p.modified_gmt })),
+    ...products.map((p) => ({ path: `/${p.slug}/`, modified: p.modified_gmt })),
+    ...posts.map((p) => ({ path: `/blog/${p.slug}/`, modified: p.modified_gmt })),
+    ...webinars.map((p) => ({ path: `/webinars/${p.slug}/`, modified: p.modified_gmt })),
+  ];
 }

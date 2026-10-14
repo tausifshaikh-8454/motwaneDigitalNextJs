@@ -49,3 +49,19 @@ Field names in `lib/forms.ts` must match the CF7 form tags.
 ## WordPress structure
 - Page **Global Settings** (`/global-settings`, ID 8) holds site-wide ACF fields:
   logo, contact details, regional offices, social links, newsletter, copyright, popup texts.
+
+## SEO
+
+- Page titles, descriptions, social images and noindex come from the **Yoast SEO** box on each page/post in WordPress (copied from the old site).
+- Canonical URLs always point to this site (`NEXT_PUBLIC_SITE_URL`), never to the WordPress address.
+- `/sitemap.xml` and `/robots.txt` are generated from WordPress content; old Yoast sitemap URLs (`/sitemap_index.xml` …) redirect to `/sitemap.xml`.
+- The favicon is the WordPress **Site Icon** (Settings → General).
+
+## Going live checklist
+
+1. Set `NEXT_PUBLIC_SITE_URL` to the real domain and `REVALIDATE_SECRET` in the hosting environment.
+2. In WordPress → Snippets → "Motwane – refresh Next.js on content change", set `MDG_NEXT_SITE_URL` to the same domain.
+   This also makes the WordPress front end redirect visitors to the Next.js site
+   (snippet "Motwane – hide WordPress front end from search"; until then it sends `noindex`).
+3. Set up WP Mail SMTP so form notification emails are delivered.
+4. Submit `https://<domain>/sitemap.xml` in Google Search Console.

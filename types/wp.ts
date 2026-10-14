@@ -110,7 +110,18 @@ export interface YoastHead {
   og_description?: string;
   og_image?: { url: string; width?: number; height?: number }[];
   og_type?: string;
+  og_site_name?: string;
+  og_locale?: string;
+  article_published_time?: string;
+  article_modified_time?: string;
   twitter_card?: string;
+}
+
+/** WordPress site info from the REST API index (/wp-json/) */
+export interface WPSiteInfo {
+  name: string;
+  description: string;
+  site_icon_url?: string;
 }
 
 /** Product custom post type (/wp/v2/products) */
@@ -216,6 +227,7 @@ export interface WPCategory {
   name: string;
   slug: string;
   count: number;
+  yoast_head_json?: YoastHead;
 }
 
 export interface WPMediaEmbed {
