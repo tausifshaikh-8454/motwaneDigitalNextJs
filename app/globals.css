@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/*
+ * Gotham — self-hosted. Place the licensed font files in /public/fonts:
+ *   Gotham-Book.ttf, Gotham-Medium.ttf, Gotham-Bold.ttf
+ */
+@font-face {
+  font-family: "Gotham";
+  src: url("/fonts/Gotham-Book.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gotham";
+  src: url("/fonts/Gotham-Medium.ttf") format("truetype");
+  font-weight: 500 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gotham";
+  src: url("/fonts/Gotham-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Design tokens extracted from motwanedigital.com */
+@theme {
+  --font-sans: "Gotham", "Montserrat", ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary: #0d6cb3; /* brand blue: headings, links, footer bar */
+  --color-primary-bright: #1387c9; /* "Get in Touch" button */
+  --color-accent: #f9bd15; /* yellow CTA */
+  --color-ink: #000000; /* nav + heading text */
+  --color-body: #334155; /* body text */
+  --color-muted: #54595f;
+  --color-field: #475569; /* input text */
+  --color-line: #9ca3af; /* input underline */
+  --color-tint: #ecf8ff; /* light-blue sections + footer */
+  --color-tint-strong: #e6f6ff; /* dropdown background */
+  --color-form: #deedf5; /* popup form panel */
+  --color-legal: #d1d1d1; /* copyright text */
+
+  --container-site: 1280px;
+  --shadow-header: 0px 7px 29px 0px rgba(100, 100, 111, 0.2);
+
+  --text-h1: 40px;
+  --text-h1--line-height: 1.4;
+  --text-eyebrow: 24px;
+  --text-eyebrow--line-height: 1.4;
+  --text-lead: 22px;
+  --text-lead--line-height: 1.4;
+
+  /* Client logo strip: content is duplicated once, so -50% loops seamlessly */
+  --animate-marquee: marquee 45s linear infinite;
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white font-sans text-base text-body antialiased;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: 20px;
+}

@@ -1,0 +1,644 @@
+[
+  {
+    "key": "group_mdgs_global_settings",
+    "title": "Global Settings",
+    "fields": [
+      {
+        "key": "field_mdgs001",
+        "label": "Branding",
+        "name": "",
+        "type": "tab",
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_mdgs002",
+        "label": "Logo",
+        "name": "logo",
+        "type": "image",
+        "instructions": "",
+        "required": 1,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "return_format": "array",
+        "preview_size": "medium",
+        "library": "all"
+      },
+      {
+        "key": "field_mdgs003",
+        "label": "Header button label",
+        "name": "header_cta_label",
+        "type": "text",
+        "instructions": "Label of the header button that opens the Get in Touch popup.",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        }
+      },
+      {
+        "key": "field_mdgs004",
+        "label": "Contact details",
+        "name": "",
+        "type": "tab",
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_mdgs005",
+        "label": "Head office address",
+        "name": "head_office_address",
+        "type": "textarea",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "rows": 3,
+        "new_lines": ""
+      },
+      {
+        "key": "field_mdgs006",
+        "label": "Phone",
+        "name": "phone",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        }
+      },
+      {
+        "key": "field_mdgs007",
+        "label": "Email",
+        "name": "email",
+        "type": "email",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "50",
+          "class": "",
+          "id": ""
+        }
+      },
+      {
+        "key": "field_mdgs012",
+        "label": "Regional offices",
+        "name": "regional_offices",
+        "type": "repeater",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "layout": "block",
+        "button_label": "Add office",
+        "sub_fields": [
+          {
+            "key": "field_mdgs008",
+            "label": "City",
+            "name": "city",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "25",
+              "class": "",
+              "id": ""
+            }
+          },
+          {
+            "key": "field_mdgs009",
+            "label": "Address",
+            "name": "address",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "75",
+              "class": "",
+              "id": ""
+            },
+            "rows": 2
+          },
+          {
+            "key": "field_mdgs010",
+            "label": "Email",
+            "name": "email",
+            "type": "email",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          },
+          {
+            "key": "field_mdgs011",
+            "label": "Phone",
+            "name": "phone",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          }
+        ]
+      },
+      {
+        "key": "field_mdgs013",
+        "label": "Social",
+        "name": "",
+        "type": "tab",
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_mdgs016",
+        "label": "Social links",
+        "name": "social_links",
+        "type": "repeater",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "layout": "table",
+        "button_label": "Add link",
+        "sub_fields": [
+          {
+            "key": "field_mdgs014",
+            "label": "Platform",
+            "name": "platform",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "30",
+              "class": "",
+              "id": ""
+            },
+            "choices": {
+              "facebook": "Facebook",
+              "linkedin": "LinkedIn",
+              "youtube": "YouTube",
+              "instagram": "Instagram",
+              "x": "X / Twitter"
+            },
+            "return_format": "value"
+          },
+          {
+            "key": "field_mdgs015",
+            "label": "URL",
+            "name": "url",
+            "type": "url",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "70",
+              "class": "",
+              "id": ""
+            }
+          }
+        ]
+      },
+      {
+        "key": "field_mdgs017",
+        "label": "Newsletter",
+        "name": "",
+        "type": "tab",
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_mdgs018",
+        "label": "Heading",
+        "name": "newsletter_heading",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        }
+      },
+      {
+        "key": "field_mdgs019",
+        "label": "Email placeholder",
+        "name": "newsletter_placeholder",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        }
+      },
+      {
+        "key": "field_mdgs020",
+        "label": "Consent text",
+        "name": "newsletter_consent",
+        "type": "textarea",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "rows": 2
+      },
+      {
+        "key": "field_mdgs021",
+        "label": "Contact Form 7 form ID",
+        "name": "newsletter_form_id",
+        "type": "number",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        }
+      },
+      {
+        "key": "field_mdgs022",
+        "label": "Success message",
+        "name": "newsletter_success",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        }
+      },
+      {
+        "key": "field_mdgs023",
+        "label": "Footer",
+        "name": "",
+        "type": "tab",
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_mdgs024",
+        "label": "Copyright text",
+        "name": "copyright_text",
+        "type": "text",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        }
+      },
+      {
+        "key": "field_mdgs025",
+        "label": "Popups & forms",
+        "name": "",
+        "type": "tab",
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_mdgs030",
+        "label": "Get in Touch popup",
+        "name": "get_in_touch_popup",
+        "type": "group",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "layout": "block",
+        "sub_fields": [
+          {
+            "key": "field_mdgs026",
+            "label": "Popup heading",
+            "name": "title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          },
+          {
+            "key": "field_mdgs027",
+            "label": "Intro text",
+            "name": "intro",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            },
+            "rows": 2
+          },
+          {
+            "key": "field_mdgs028",
+            "label": "Contact Form 7 form ID",
+            "name": "form_id",
+            "type": "number",
+            "instructions": "ID of the Contact Form 7 form that receives this popup's submissions.",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          },
+          {
+            "key": "field_mdgs029",
+            "label": "Success message",
+            "name": "success_message",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          }
+        ]
+      },
+      {
+        "key": "field_mdgs035",
+        "label": "Request Brochure popup",
+        "name": "brochure_popup",
+        "type": "group",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "layout": "block",
+        "sub_fields": [
+          {
+            "key": "field_mdgs031",
+            "label": "Popup heading",
+            "name": "title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          },
+          {
+            "key": "field_mdgs032",
+            "label": "Intro text",
+            "name": "intro",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            },
+            "rows": 2
+          },
+          {
+            "key": "field_mdgs033",
+            "label": "Contact Form 7 form ID",
+            "name": "form_id",
+            "type": "number",
+            "instructions": "ID of the Contact Form 7 form that receives this popup's submissions.",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          },
+          {
+            "key": "field_mdgs034",
+            "label": "Success message",
+            "name": "success_message",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          }
+        ]
+      },
+      {
+        "key": "field_mdgs040",
+        "label": "Request Recap popup",
+        "name": "recap_popup",
+        "type": "group",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "layout": "block",
+        "sub_fields": [
+          {
+            "key": "field_mdgs036",
+            "label": "Popup heading",
+            "name": "title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          },
+          {
+            "key": "field_mdgs037",
+            "label": "Intro text",
+            "name": "intro",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            },
+            "rows": 2
+          },
+          {
+            "key": "field_mdgs038",
+            "label": "Contact Form 7 form ID",
+            "name": "form_id",
+            "type": "number",
+            "instructions": "ID of the Contact Form 7 form that receives this popup's submissions.",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          },
+          {
+            "key": "field_mdgs039",
+            "label": "Success message",
+            "name": "success_message",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          }
+        ]
+      },
+      {
+        "key": "field_mdgs041",
+        "label": "Product page enquiry",
+        "name": "",
+        "type": "tab",
+        "placement": "top",
+        "endpoint": 0
+      },
+      {
+        "key": "field_mdgs045",
+        "label": "\"Get In Touch\" section (bottom of product pages)",
+        "name": "product_enquiry",
+        "type": "group",
+        "instructions": "",
+        "required": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "layout": "block",
+        "sub_fields": [
+          {
+            "key": "field_mdgs042",
+            "label": "Heading",
+            "name": "heading",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          },
+          {
+            "key": "field_mdgs043",
+            "label": "Contact Form 7 form ID",
+            "name": "form_id",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "50",
+              "class": "",
+              "id": ""
+            }
+          },
+          {
+            "key": "field_mdgs044",
+            "label": "Image",
+            "name": "image",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all"
+          },
+          {
+            "key": "field_mdgs046",
+            "label": "Success message",
+            "name": "success_message",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            }
+          }
+        ]
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "page",
+          "operator": "==",
+          "value": "8"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+      "the_content",
+      "excerpt",
+      "discussion",
+      "comments",
+      "revisions",
+      "slug",
+      "author",
+      "format",
+      "page_attributes",
+      "featured_image",
+      "categories",
+      "tags",
+      "send-trackbacks"
+    ],
+    "active": true,
+    "description": "Site-wide settings used by the Next.js frontend.",
+    "show_in_rest": 1
+  }
+]
