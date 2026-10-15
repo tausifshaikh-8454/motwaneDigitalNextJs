@@ -32,7 +32,7 @@ export function PopupForm({
   return (
     <>
       {intro && <p className="mb-8 leading-[1.45] text-ink">{intro}</p>}
-      <form onSubmit={onSubmit} noValidate className="space-y-5 bg-form p-5">
+      <form method="post" onSubmit={onSubmit} noValidate className="space-y-5 bg-form p-5">
         {FORM_FIELDS[formType].map((f) => {
           const id = `${formType}-${f.name}`;
           const err = errors[f.name]?.message;

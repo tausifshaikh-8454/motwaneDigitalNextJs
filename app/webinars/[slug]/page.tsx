@@ -7,7 +7,8 @@ import { WebinarActions } from "@/components/webinars/WebinarActions";
 import { WebinarCard } from "@/components/webinars/WebinarCard";
 import { Carousel } from "@/components/ui/Carousel";
 import { internalizeLinks } from "@/lib/blog";
-import { decodeEntities } from "@/lib/links";
+import { cssUrl, decodeEntities } from "@/lib/links";
+import { sanitizeWpHtml } from "@/lib/sanitize";
 import { yoastToMetadata } from "@/lib/seo";
 import { formatWebinarDate, isUpcoming, webinarIsoDate } from "@/lib/webinars";
 import { getWebinarBySlug, getWebinars, getWebinarsSettings } from "@/lib/wp";
@@ -81,7 +82,7 @@ async function Webinar({ params }: Pick<PageProps<"/webinars/[slug]">, "params">
             {settings?.overview_label && <h2 className={h2}>{settings.overview_label}</h2>}
             <div
               className="mt-5 leading-[1.4] text-ink [&_a]:text-primary hover:[&_a]:underline [&_li]:mb-2 [&_p]:mb-7 [&_ul]:mb-7 [&_ul]:list-disc [&_ul]:pl-5"
-              dangerouslySetInnerHTML={{ __html: internalizeLinks(webinar.content.rendered) }}
+              dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(internalizeLinks(webinar.content.rendered)) }}
             />
           </section>
         )}
@@ -131,7 +132,7 @@ async function Webinar({ params }: Pick<PageProps<"/webinars/[slug]">, "params">
 
               <div
                 className="flex min-h-[150px] items-center justify-center bg-contain bg-center bg-no-repeat lg:min-h-[250px]"
-                style={acf.recap_image ? { backgroundImage: `url("${acf.recap_image.url}")` } : undefined}
+                style={acf.recap_image ? { backgroundImage: cssUrl(acf.recap_image.url) } : undefined}
               >
                 <WebinarActions
                   upcoming={isUpcoming(webinar)}
@@ -191,7 +192,7 @@ async function Webinar({ params }: Pick<PageProps<"/webinars/[slug]">, "params">
       {settings?.cta_heading && (
         <section
           className="bg-[#0d3a5f] bg-cover bg-center bg-no-repeat py-[60px] lg:bg-fixed lg:py-20"
-          style={cta ? { backgroundImage: `url("${cta.url}")` } : undefined}
+          style={cta ? { backgroundImage: cssUrl(cta.url) } : undefined}
         >
           <div className="container-site flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between md:gap-8">
             <h2 className="max-w-[740px] text-xl font-medium leading-[1.4] text-white lg:text-[35px]">

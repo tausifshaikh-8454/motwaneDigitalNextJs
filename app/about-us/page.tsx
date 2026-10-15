@@ -5,6 +5,7 @@ import { LongArrowRight } from "@/components/ui/Icons";
 import { WpImage } from "@/components/ui/WpImage";
 import { getPageBySlug } from "@/lib/wp";
 import { yoastToMetadata } from "@/lib/seo";
+import { cssUrl } from "@/lib/links";
 import type { AboutAcf } from "@/types/wp";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,7 +26,7 @@ export default async function AboutPage() {
       {/* Banner */}
       <section
         className="flex min-h-[346px] items-center bg-[#1d2b3a] bg-cover bg-center bg-no-repeat py-14 md:min-h-[352px] lg:min-h-[397px]"
-        style={hero ? { backgroundImage: `url("${hero.url}")` } : undefined}
+        style={hero ? { backgroundImage: cssUrl(hero.url) } : undefined}
       >
         <div className="container-site text-center text-white">
           {acf?.hero_eyebrow && (
@@ -86,7 +87,7 @@ export default async function AboutPage() {
                     <span
                       aria-hidden="true"
                       className="absolute -inset-x-5 top-1/2 hidden h-px -translate-y-1/2 border-t border-dashed border-primary/60 bg-repeat-x md:block"
-                      style={line ? { backgroundImage: `url("${line.url}")`, borderTop: 0 } : undefined}
+                      style={line ? { backgroundImage: cssUrl(line.url), borderTop: 0 } : undefined}
                     />
                     <span className="relative h-2.5 w-2.5 rounded-full bg-primary" aria-hidden="true" />
                   </div>

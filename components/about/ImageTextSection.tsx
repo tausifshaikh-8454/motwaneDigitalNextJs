@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { WpImage } from "@/components/ui/WpImage";
+import { sanitizeWpHtml } from "@/lib/sanitize";
 import type { WPImage } from "@/types/wp";
 
 /**
@@ -54,7 +55,7 @@ export function ImageTextSection({
           {headingHtml && (
             <h2
               className={`mt-2.5 font-bold leading-[1.4] text-ink ${headingClassName}`}
-              dangerouslySetInnerHTML={{ __html: headingHtml }}
+              dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(headingHtml) }}
             />
           )}
           {text && <p className={`mt-2.5 leading-[1.4] text-ink ${textClassName}`}>{text}</p>}

@@ -22,7 +22,7 @@ export function NewsletterForm({ placeholder, successMessage }: { placeholder: s
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="relative max-w-[344px]">
+    <form method="post" onSubmit={onSubmit} noValidate className="relative max-w-[344px]">
       <label htmlFor="newsletter-email" className="sr-only">
         {placeholder}
       </label>

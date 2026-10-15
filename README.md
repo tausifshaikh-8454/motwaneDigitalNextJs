@@ -57,6 +57,49 @@ Field names in `lib/forms.ts` must match the CF7 form tags.
 - `/sitemap.xml` and `/robots.txt` are generated from WordPress content; old Yoast sitemap URLs (`/sitemap_index.xml` …) redirect to `/sitemap.xml`.
 - The favicon is the WordPress **Site Icon** (Settings → General).
 
+## Security (VAPT hardening)
+
+Code-level protections against the common OWASP / VAPT findings. This is not a
+substitute for a real penetration test by your security vendor.
+
+**Next.js site**
+
+- **XSS** – all HTML coming from WordPress is cleaned with `sanitize-html`
+  (`lib/sanitize.ts`) before rendering: scripts, iframes, `on*` handlers, forms
+  and `javascript:` links are stripped. Links from WordPress only allow
+  `http(s)`, `mailto`, `tel` and relative URLs (`lib/links.ts`); background image
+  URLs are escaped (`cssUrl`).
+- **Security headers** (`next.config.ts`) – Content-Security-Policy, HSTS
+  (production), X-Frame-Options, X-Content-Type-Options, Referrer-Policy,
+  Permissions-Policy, Cross-Origin-Opener-Policy; `X-Powered-By` removed.
+  CSP keeps `'unsafe-inline'` for scripts because pages are statically generated
+  (nonces need per-request rendering) – CMS HTML is sanitised so this is not an
+  injection path.
+- **Forms API** (`/api/forms`) – same-site Origin check (CSRF), JSON/multipart
+  only, body size limit (64 KB JSON / 6 MB with resume) checked before parsing,
+  zod validation with length limits, honeypot, rate limit (5/min/IP per server
+  instance), resume checked by extension, size **and** file signature
+  (PDF/DOC/DOCX), file name cleaned, `Cache-Control: no-store`. WordPress is
+  never called from the browser and its URL is server-only.
+- **Revalidate API** – secret compared in constant time; tag name validated.
+- **WordPress forms endpoint** – `/api/forms` sends `WP_FORMS_SECRET` in the
+  `X-MDG-Form-Key` header; the WordPress snippet "Motwane – only accept forms from
+  Next.js" rejects Contact Form 7 submissions without it, so nobody can skip the
+  checks above by posting to WordPress directly. Set the env var on Vercel and
+  deploy **before** activating the snippet.
+- **Errors** – `app/error.tsx` / `app/global-error.tsx` show a generic message
+  (no stack traces). Secrets live only in environment variables.
+
+**Still to do on the hosting / WordPress side**
+
+- Rename the `admin` WordPress user, use a strong password + 2FA and a
+  login-attempt limiter.
+- Delete `readme.html` and `license.txt` from the WordPress root.
+- Force HTTPS for wp-admin (Hostinger → SSL → Force HTTPS).
+- For a stronger rate limit across Vercel instances, add a Vercel Firewall rate
+  limit rule on `/api/forms` (and optionally Cloudflare Turnstile CAPTCHA).
+- Keep `npm audit --omit=dev` at 0 and WordPress core/plugins up to date.
+
 ## Going live checklist
 
 1. Set `NEXT_PUBLIC_SITE_URL` to the real domain and `REVALIDATE_SECRET` in the hosting environment.

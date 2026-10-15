@@ -11,6 +11,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { getPageBySlug, getProducts } from "@/lib/wp";
 import { decodeEntities, isExternal, toHref } from "@/lib/links";
 import { yoastToMetadata } from "@/lib/seo";
+import { sanitizeWpHtml } from "@/lib/sanitize";
 import type { HomeAcf, WPLink, WPProduct } from "@/types/wp";
 
 const HOME_SLUG = "home";
@@ -84,7 +85,7 @@ export default async function HomePage() {
       {!!acf.faqs?.length && (
         <section className="container-site py-[70px]">
           <SectionHeading eyebrow={acf.faq_eyebrow} heading={acf.faq_heading} />
-          <Faq items={acf.faqs} />
+          <Faq items={acf.faqs.map((f) => ({ question: f.question, answer: sanitizeWpHtml(f.answer) }))} />
         </section>
       )}
     </>

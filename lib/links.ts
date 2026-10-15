@@ -9,7 +9,17 @@ export function toHref(url: string | undefined | null): string {
     const path = url.slice(wpBase.length) || "/";
     return path.startsWith("/") ? path : `/${path}`;
   }
-  return url;
+  // Only normal links are allowed (blocks javascript:, data: and similar).
+  return /^(https?:|mailto:|tel:|\/|#)/i.test(url.trim()) ? url.trim() : "#";
+}
+
+/**
+ * CSS background-image value for an image URL from WordPress.
+ * Only http(s) URLs are used, and characters that could break out of url("…") are encoded.
+ */
+export function cssUrl(url: string | undefined | null): string | undefined {
+  if (!url || !/^https?:\/\//i.test(url)) return undefined;
+  return `url("${url.replace(/["'()\\\s]/g, (c) => `%${c.charCodeAt(0).toString(16).padStart(2, "0")}`)}")`;
 }
 
 export function isExternal(href: string) {

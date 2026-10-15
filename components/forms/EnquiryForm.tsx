@@ -19,7 +19,7 @@ export function EnquiryForm({ productName, successMessage }: { productName: stri
     "w-full border-b border-primary bg-[#3d89c2] px-[18px] py-3 text-white outline-none placeholder:text-white focus:border-white";
 
   return (
-    <form onSubmit={onSubmit} noValidate className="mt-6 grid gap-x-3 gap-y-5 sm:grid-cols-2">
+    <form method="post" onSubmit={onSubmit} noValidate className="mt-6 grid gap-x-3 gap-y-5 sm:grid-cols-2">
       {fields.map((f) => {
         const err = errors[f.name]?.message;
         return (

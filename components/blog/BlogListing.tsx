@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Carousel } from "@/components/ui/Carousel";
 import { WpImage } from "@/components/ui/WpImage";
+import { cssUrl } from "@/lib/links";
 import { MustReadCard, PostCard } from "./PostCard";
 import type { BlogSettings, WPCategory, WPPost } from "@/types/wp";
 
@@ -67,7 +68,7 @@ export function BlogListing({
       {categories.length > 0 && (
         <section
           className="relative isolate overflow-hidden bg-[#002b4b] bg-cover bg-center bg-no-repeat lg:bg-fixed"
-          style={settings?.categories_image ? { backgroundImage: `url(${settings.categories_image.url})` } : undefined}
+          style={settings?.categories_image ? { backgroundImage: cssUrl(settings.categories_image.url) } : undefined}
         >
           <div className="absolute inset-0 -z-10 bg-[#002b4b]/55" />
           <div className="container-site py-12 text-center lg:py-[70px]">

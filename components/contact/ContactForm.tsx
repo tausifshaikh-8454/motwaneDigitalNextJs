@@ -19,7 +19,7 @@ export function ContactForm({ submitLabel, successMessage }: { submitLabel: stri
   } = form;
 
   return (
-    <form onSubmit={onSubmit} noValidate className="mt-10 lg:mt-[53px]">
+    <form method="post" onSubmit={onSubmit} noValidate className="mt-10 lg:mt-[53px]">
       <div className="grid gap-y-[30px] md:grid-cols-3 md:gap-x-5 md:gap-y-8 lg:gap-x-[65px]">
         {fields.map((f) => {
           const id = `contact-${f.name}`;

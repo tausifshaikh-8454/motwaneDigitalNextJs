@@ -3,6 +3,7 @@ import { WebinarCard } from "@/components/webinars/WebinarCard";
 import { Carousel } from "@/components/ui/Carousel";
 import { getPageBySlug, getWebinars, getWebinarsSettings } from "@/lib/wp";
 import { yoastToMetadata } from "@/lib/seo";
+import { cssUrl } from "@/lib/links";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug("webinars");
@@ -18,7 +19,7 @@ export default async function WebinarsPage() {
     <>
       <section
         className="flex min-h-[173px] items-center bg-cover bg-[50%_0%] bg-no-repeat py-10 md:min-h-[289px] lg:min-h-[317px]"
-        style={hero ? { backgroundImage: `url("${hero.url}")` } : undefined}
+        style={hero ? { backgroundImage: cssUrl(hero.url) } : undefined}
       >
         <div className="container-site">
           <h1 className="text-[30px] font-bold uppercase leading-[1.4] text-white md:text-2xl lg:text-h1">

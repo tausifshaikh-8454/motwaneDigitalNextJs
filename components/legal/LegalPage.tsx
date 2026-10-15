@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { internalizeLinks } from "@/lib/blog";
 import { decodeEntities } from "@/lib/links";
+import { sanitizeWpHtml } from "@/lib/sanitize";
 import { getPageBySlug } from "@/lib/wp";
 
 const contentStyles = [
@@ -27,7 +28,7 @@ export async function LegalPage({ slug }: { slug: string }) {
       </h1>
       <div
         className={`mt-5 lg:px-5 ${contentStyles}`}
-        dangerouslySetInnerHTML={{ __html: internalizeLinks(page.content?.rendered ?? "") }}
+        dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(internalizeLinks(page.content?.rendered ?? "")) }}
       />
     </article>
   );

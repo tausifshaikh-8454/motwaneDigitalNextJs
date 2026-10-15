@@ -45,7 +45,7 @@ export function ApplyForm({ submitLabel, successMessage }: { submitLabel: string
   }, [setValue]);
 
   return (
-    <form onSubmit={onSubmit} noValidate className="mx-auto mt-[52px] max-w-[840px]">
+    <form method="post" onSubmit={onSubmit} noValidate className="mx-auto mt-[52px] max-w-[840px]">
       <div className="grid gap-y-[22px] md:grid-cols-6 md:gap-x-[30px]">
         {fields.map((f) => {
           const id = `apply-${f.name}`;

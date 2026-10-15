@@ -9,6 +9,7 @@ import { TableOfContents } from "@/components/blog/TableOfContents";
 import { getAllPosts, getBlogSettings, getPostBySlug } from "@/lib/wp";
 import { featuredImage, formatDate, internalizeLinks, readingMinutes, withHeadingIds } from "@/lib/blog";
 import { decodeEntities } from "@/lib/links";
+import { sanitizeWpHtml } from "@/lib/sanitize";
 import { yoastToMetadata } from "@/lib/seo";
 
 export async function generateStaticParams() {
@@ -41,7 +42,8 @@ async function Article({ params }: Pick<PageProps<"/blog/[slug]">, "params">) {
   if (!post) notFound();
 
   const title = decodeEntities(post.title.rendered);
-  const { html, toc } = withHeadingIds(internalizeLinks(post.content?.rendered ?? ""));
+  const { html: rawHtml, toc } = withHeadingIds(internalizeLinks(post.content?.rendered ?? ""));
+  const html = sanitizeWpHtml(rawHtml);
   const minutes = readingMinutes(`${post.acf?.intro ?? ""} ${post.content?.rendered ?? ""}`);
   const banner = post.acf?.banner_image || null;
   const fallback = featuredImage(post);
@@ -66,7 +68,7 @@ async function Article({ params }: Pick<PageProps<"/blog/[slug]">, "params">) {
           {post.acf?.intro && (
             <div
               className="mt-5 pb-10 font-medium leading-6 text-ink [&_a]:text-primary [&_p+p]:mt-3"
-              dangerouslySetInnerHTML={{ __html: internalizeLinks(post.acf.intro) }}
+              dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(internalizeLinks(post.acf.intro)) }}
             />
           )}
         </header>

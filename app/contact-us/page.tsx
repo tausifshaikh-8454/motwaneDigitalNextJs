@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { getContactSettings, getPageBySlug } from "@/lib/wp";
 import { yoastToMetadata } from "@/lib/seo";
+import { cssUrl } from "@/lib/links";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug("contact-us");
@@ -17,7 +18,7 @@ export default async function ContactPage() {
     <>
       <section
         className="flex min-h-[241px] items-center bg-[#16222d] bg-cover bg-center bg-no-repeat py-10 md:min-h-[236px] lg:min-h-[304px]"
-        style={hero ? { backgroundImage: `url("${hero.url}")` } : undefined}
+        style={hero ? { backgroundImage: cssUrl(hero.url) } : undefined}
       >
         <div className="container-site">
           <h1 className="text-2xl font-bold leading-[1.4] text-white lg:text-h1">{settings?.hero_title}</h1>
