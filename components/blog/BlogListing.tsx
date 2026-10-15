@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Carousel } from "@/components/ui/Carousel";
 import { WpImage } from "@/components/ui/WpImage";
 import { MustReadCard, PostCard } from "./PostCard";
 import type { BlogSettings, WPCategory, WPPost } from "@/types/wp";
@@ -14,6 +15,7 @@ export function BlogListing({
   categories,
   activeCategory,
   posts,
+  sliderPosts,
   page,
   totalPages,
   basePath,
@@ -23,6 +25,8 @@ export function BlogListing({
   categories: WPCategory[];
   activeCategory: string | null;
   posts: WPPost[];
+  /** Every post of this listing, shown as a slider on phones */
+  sliderPosts: WPPost[];
   page: number;
   totalPages: number;
   basePath: string;
@@ -98,17 +102,26 @@ export function BlogListing({
       {/* Grid */}
       <section className="container-site py-12 lg:py-[50px]">
         {posts.length ? (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((p, i) => (
-              <PostCard key={p.id} post={p} priority={i < 3} />
-            ))}
-          </div>
+          <>
+            {/* Tablet and desktop: grid with page numbers */}
+            <div className="hidden gap-5 md:grid md:grid-cols-2 lg:grid-cols-3">
+              {posts.map((p, i) => (
+                <PostCard key={p.id} post={p} priority={i < 3} />
+              ))}
+            </div>
+            {/* Phones: one card at a time, swipe or use the arrows */}
+            <Carousel className="md:hidden" dots={false} arrows autoplayMs={5000}>
+              {sliderPosts.map((p) => (
+                <PostCard key={p.id} post={p} />
+              ))}
+            </Carousel>
+          </>
         ) : (
           <p className="py-10 text-center text-body">No articles found.</p>
         )}
 
         {totalPages > 1 && (
-          <nav aria-label="Pagination" className="mt-10 flex items-center justify-center gap-3 font-bold">
+          <nav aria-label="Pagination" className="mt-10 hidden items-center justify-center gap-3 font-bold md:flex">
             {page > 1 ? (
               <Link href={pageHref(basePath, page - 1)} className="text-primary hover:underline">
                 Prev

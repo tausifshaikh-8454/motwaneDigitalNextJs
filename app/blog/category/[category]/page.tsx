@@ -27,6 +27,7 @@ async function Listing({ params }: Pick<PageProps<"/blog/category/[category]">, 
       categories={d.categories}
       activeCategory={category}
       posts={d.posts}
+      sliderPosts={d.sliderPosts}
       page={1}
       totalPages={d.totalPages}
       basePath={`/blog/category/${category}/`}

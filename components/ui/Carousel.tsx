@@ -3,21 +3,23 @@
 import { Children, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 const MAX_PER_VIEW = 3;
-const AUTOPLAY_MS = 4500;
 const SPEED_MS = 500;
 
 /**
- * Looping card carousel with dots (1 / 2 / 3 cards per view at mobile / tablet / desktop),
- * autoplaying every 4.5s like the old site.
+ * Looping card carousel (1 / 2 / 3 cards per view at mobile / tablet / desktop) with
+ * autoplay, touch swipe, and optional dots and arrows. Used for webinars and blog posts.
  */
-export function WebinarCarousel({
+export function Carousel({
   children,
   className = "",
   dots = true,
   arrows = false,
+  autoplayMs = 4500,
 }: {
   children: ReactNode;
   className?: string;
+  /** Time between slides (the old site used 4.5s for webinars, 5s for blogs) */
+  autoplayMs?: number;
   /** Dots under the cards */
   dots?: boolean;
   /** Previous/next buttons over the card image (used on mobile with one card per view) */
@@ -46,9 +48,9 @@ export function WebinarCarousel({
       if (document.hidden) return;
       setAnimate(true);
       setIndex((i) => Math.min(i + 1, count));
-    }, AUTOPLAY_MS);
+    }, autoplayMs);
     return () => clearInterval(t);
-  }, [loop, count]);
+  }, [loop, count, autoplayMs]);
 
   // After sliding onto the cloned cards at the end (or before the start), jump back without animation.
   useEffect(() => {

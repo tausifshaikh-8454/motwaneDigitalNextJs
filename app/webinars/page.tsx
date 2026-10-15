@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { WebinarCard } from "@/components/webinars/WebinarCard";
-import { WebinarCarousel } from "@/components/webinars/WebinarCarousel";
+import { Carousel } from "@/components/ui/Carousel";
 import { getPageBySlug, getWebinars, getWebinarsSettings } from "@/lib/wp";
 import { yoastToMetadata } from "@/lib/seo";
 
@@ -36,11 +36,11 @@ export default async function WebinarsPage() {
                   <WebinarCard key={w.id} webinar={w} learnMore={learnMore} priority={i < 4} />
                 ))}
               </div>
-              <WebinarCarousel className="md:hidden" dots={false} arrows>
+              <Carousel className="md:hidden" dots={false} arrows>
                 {webinars.map((w) => (
                   <WebinarCard key={w.id} webinar={w} learnMore={learnMore} sizes="100vw" />
                 ))}
-              </WebinarCarousel>
+              </Carousel>
             </>
           )}
         </div>

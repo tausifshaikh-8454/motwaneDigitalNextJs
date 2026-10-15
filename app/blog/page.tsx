@@ -18,6 +18,7 @@ export default async function BlogPage() {
       categories={d.categories}
       activeCategory={null}
       posts={d.posts}
+      sliderPosts={d.sliderPosts}
       page={1}
       totalPages={d.totalPages}
       basePath="/blog/"

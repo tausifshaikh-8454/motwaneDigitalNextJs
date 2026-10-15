@@ -5,7 +5,7 @@ import { CmsLink } from "@/components/ui/CmsLink";
 import { WpImage } from "@/components/ui/WpImage";
 import { WebinarActions } from "@/components/webinars/WebinarActions";
 import { WebinarCard } from "@/components/webinars/WebinarCard";
-import { WebinarCarousel } from "@/components/webinars/WebinarCarousel";
+import { Carousel } from "@/components/ui/Carousel";
 import { internalizeLinks } from "@/lib/blog";
 import { decodeEntities } from "@/lib/links";
 import { yoastToMetadata } from "@/lib/seo";
@@ -175,7 +175,7 @@ async function Webinar({ params }: Pick<PageProps<"/webinars/[slug]">, "params">
           {settings?.other_heading && (
             <h2 className="text-lg font-medium leading-[1.4] text-primary lg:text-[25px]">{settings.other_heading}</h2>
           )}
-          <WebinarCarousel className="mt-5">
+          <Carousel className="mt-5">
             {others.map((w) => (
               <WebinarCard
                 key={w.id}
@@ -184,7 +184,7 @@ async function Webinar({ params }: Pick<PageProps<"/webinars/[slug]">, "params">
                 sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw"
               />
             ))}
-          </WebinarCarousel>
+          </Carousel>
         </section>
       )}
 

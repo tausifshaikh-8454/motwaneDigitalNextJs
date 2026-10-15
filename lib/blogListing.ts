@@ -17,6 +17,8 @@ export async function loadBlogListing(page: number, categorySlug: string | null)
     categories,
     mustRead: all.filter((p) => p.acf?.must_read),
     posts,
+    // Mobile shows every post of this listing in a slider (no page numbers), as on the old site.
+    sliderPosts: category ? all.filter((p) => p.categories.includes(category.id)) : all,
     totalPages,
   };
 }
