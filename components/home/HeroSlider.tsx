@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { WpImage } from "@/components/ui/WpImage";
 import { useModal } from "@/components/modals/ModalProvider";
 import type { WPImage } from "@/types/wp";
@@ -30,7 +30,6 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   const [index, setIndex] = useState(0);
   const [animate, setAnimate] = useState(true);
   const [paused, setPaused] = useState(false);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const next = useCallback(() => {
     setAnimate(true);
@@ -39,10 +38,8 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
 
   useEffect(() => {
     if (count < 2 || paused) return;
-    timer.current = setTimeout(next, AUTOPLAY_MS);
-    return () => {
-      if (timer.current) clearTimeout(timer.current);
-    };
+    const timer = setTimeout(next, AUTOPLAY_MS);
+    return () => clearTimeout(timer);
   }, [index, paused, count, next]);
 
   function onTransitionEnd() {
@@ -53,7 +50,10 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
   }
 
   if (!count) return null;
-  const rendered = count > 1 ? [...slides, { ...slides[0], key: `${slides[0].key}-clone` }] : slides;
+  const rendered =
+    count > 1
+      ? [...slides, { ...slides[0], key: `${slides[0].key}-clone` }]
+      : slides;
 
   return (
     <section
@@ -79,23 +79,42 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
             role="group"
             aria-roledescription="slide"
           >
-            <WpImage image={s.image} fill priority={i === 0} sizes="100vw" className="object-cover" />
+            <WpImage
+              image={s.image}
+              fill
+              priority={i === 0}
+              sizes="100vw"
+              className="object-cover"
+            />
             <div className="absolute inset-0 bg-black/[0.063]" />
             <div className="container-site relative flex h-full flex-col justify-center text-white">
-              {s.eyebrow && <p className="text-base font-medium leading-[1.4] lg:text-eyebrow">{s.eyebrow}</p>}
+              {s.eyebrow && (
+                <p className="text-base font-medium leading-[1.4] lg:text-eyebrow">
+                  {s.eyebrow}
+                </p>
+              )}
               {s.heading && (
                 <h2 className="mt-3 text-xl font-medium leading-[1.4] tracking-[1.2px] md:mt-6 md:text-[34px] lg:text-h1">
                   {s.heading}
                 </h2>
               )}
               {s.subheading && (
-                <p className="mt-3 text-base font-medium leading-[1.4] tracking-[0.5px] md:mt-6 md:text-[22px] lg:text-eyebrow">{s.subheading}</p>
+                <p className="mt-3 text-base font-medium leading-[1.4] tracking-[0.5px] md:mt-6 md:text-[22px] lg:text-eyebrow">
+                  {s.subheading}
+                </p>
               )}
               {s.meta && (s.meta.date || s.meta.location) && (
                 <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-base md:text-lg">
                   {s.meta.date && (
                     <li className="flex items-center gap-2">
-                      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        aria-hidden="true"
+                      >
                         <rect x="3" y="5" width="18" height="16" rx="2" />
                         <path d="M3 10h18M8 3v4M16 3v4" strokeLinecap="round" />
                       </svg>
@@ -104,7 +123,14 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                   )}
                   {s.meta.location && (
                     <li className="flex items-center gap-2">
-                      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        aria-hidden="true"
+                      >
                         <path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z" />
                         <circle cx="12" cy="10" r="2.5" />
                       </svg>
@@ -121,7 +147,11 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                       className={btn}
                       tabIndex={i % count === index % count ? 0 : -1}
                       onClick={() =>
-                        open({ type: "brochure", productName: s.brochure!.productName, brochureUrl: s.brochure!.fileUrl })
+                        open({
+                          type: "brochure",
+                          productName: s.brochure!.productName,
+                          brochureUrl: s.brochure!.fileUrl,
+                        })
                       }
                     >
                       {s.brochure.label}
@@ -129,11 +159,23 @@ export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
                   )}
                   {s.links.map((l) =>
                     l.external ? (
-                      <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className={btn}>
+                      <a
+                        key={l.href}
+                        href={l.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={btn}
+                        tabIndex={i % count === index % count ? 0 : -1}
+                      >
                         {l.label}
                       </a>
                     ) : (
-                      <Link key={l.href} href={l.href} className={btn} tabIndex={i % count === index % count ? 0 : -1}>
+                      <Link
+                        key={l.href}
+                        href={l.href}
+                        className={btn}
+                        tabIndex={i % count === index % count ? 0 : -1}
+                      >
                         {l.label}
                       </Link>
                     ),

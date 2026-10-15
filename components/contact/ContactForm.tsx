@@ -1,10 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { buildSchema, FORM_FIELDS } from "@/lib/forms";
-import { submitForm } from "@/lib/submitForm";
+import { FORM_FIELDS } from "@/lib/forms";
+import { FormStatus, Honeypot, useCmsForm } from "@/components/forms/useCmsForm";
 
 /** Fields that take two columns on tablet/desktop (as on the old site). */
 const WIDE = new Set(["company-name"]);
@@ -15,25 +12,11 @@ const WIDE = new Set(["company-name"]);
  */
 export function ContactForm({ submitLabel, successMessage }: { submitLabel: string; successMessage?: string }) {
   const fields = FORM_FIELDS.contact;
-  const [honeypot, setHoneypot] = useState("");
-  const [status, setStatus] = useState<{ ok: boolean; message: string } | null>(null);
+  const { form, onSubmit, status, honeypot } = useCmsForm("contact", { successMessage });
   const {
     register,
-    handleSubmit,
-    setError,
-    reset,
     formState: { errors, isSubmitting },
-  } = useForm<Record<string, string>>({ resolver: zodResolver(buildSchema("contact")) as never });
-
-  const onSubmit = handleSubmit(async (values) => {
-    setStatus(null);
-    const result = await submitForm("contact", values, honeypot);
-    if (result.fieldErrors) {
-      for (const [name, message] of Object.entries(result.fieldErrors)) setError(name, { message });
-    }
-    setStatus({ ok: result.ok, message: result.ok ? successMessage || result.message : result.message });
-    if (result.ok) reset();
-  });
+  } = form;
 
   return (
     <form onSubmit={onSubmit} noValidate className="mt-10 lg:mt-[53px]">
@@ -78,17 +61,7 @@ export function ContactForm({ submitLabel, successMessage }: { submitLabel: stri
         })}
       </div>
 
-      {/* Honeypot: hidden from people, bots fill it in */}
-      <input
-        type="text"
-        name="website"
-        value={honeypot}
-        onChange={(e) => setHoneypot(e.target.value)}
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden="true"
-        className="absolute -left-[9999px] h-0 w-0 opacity-0"
-      />
+      <Honeypot {...honeypot} />
 
       <div className="mt-[37px] flex flex-col items-end gap-3">
         <button
@@ -98,11 +71,7 @@ export function ContactForm({ submitLabel, successMessage }: { submitLabel: stri
         >
           {isSubmitting ? "Submitting…" : submitLabel || "Submit"}
         </button>
-        {status?.message && (
-          <p role="status" className={`self-stretch text-right text-sm ${status.ok ? "text-green-700" : "text-red-600"}`}>
-            {status.message}
-          </p>
-        )}
+        <FormStatus status={status} className="self-stretch text-right text-sm" />
       </div>
     </form>
   );

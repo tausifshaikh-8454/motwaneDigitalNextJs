@@ -1,4 +1,4 @@
-import type { WPPost } from "@/types/wp";
+import type { WPMediaEmbed, WPPost } from "@/types/wp";
 import { decodeEntities } from "./links";
 
 /** "2026-10-12T10:00:00" → "October 12, 2026" (WordPress local date, no timezone shift). */
@@ -7,12 +7,16 @@ export function formatDate(wpDate: string): string {
   return new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }).format(d);
 }
 
-export function featuredImage(post: WPPost) {
-  const m = post._embedded?.["wp:featuredmedia"]?.[0];
+/** Featured Image of a post or webinar (requested with _embed=wp:featuredmedia). */
+export function featuredImage(item: {
+  title: { rendered: string };
+  _embedded?: { "wp:featuredmedia"?: WPMediaEmbed[] };
+}) {
+  const m = item._embedded?.["wp:featuredmedia"]?.[0];
   if (!m?.source_url) return null;
   return {
     url: m.source_url,
-    alt: m.alt_text || decodeEntities(post.title.rendered),
+    alt: m.alt_text || decodeEntities(item.title.rendered),
     width: m.media_details?.width ?? 1200,
     height: m.media_details?.height ?? 630,
   };

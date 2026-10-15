@@ -20,13 +20,6 @@ export interface SocialLink {
   url: string;
 }
 
-export interface Office {
-  city: string;
-  address: string;
-  email: string;
-  phone: string;
-}
-
 export interface PopupSettings {
   title: string;
   intro: string;
@@ -41,7 +34,6 @@ export interface GlobalSettings {
   head_office_address: string;
   phone: string;
   email: string;
-  regional_offices: Office[] | null;
   social_links: SocialLink[] | null;
   newsletter_heading: string;
   newsletter_placeholder: string;
@@ -72,7 +64,6 @@ export interface WPPage<TAcf = Record<string, unknown>> {
 
 /** Response of the Contact Form 7 REST "feedback" endpoint */
 export interface Cf7Response {
-  contact_form_id: number;
   status: "mail_sent" | "mail_failed" | "validation_failed" | "spam" | "aborted" | string;
   message: string;
   invalid_fields?: { field: string; message: string }[];
@@ -89,22 +80,18 @@ export interface WPLink {
 export interface WPPostRef {
   ID: number;
   post_title: string;
-  post_name: string;
-  post_type: string;
 }
 
 export interface WPFile {
   ID: number;
   url: string;
   title: string;
-  filename: string;
   mime_type: string;
 }
 
 export interface YoastHead {
   title?: string;
   description?: string;
-  canonical?: string;
   robots?: Record<string, string>;
   og_title?: string;
   og_description?: string;
@@ -114,7 +101,6 @@ export interface YoastHead {
   og_locale?: string;
   article_published_time?: string;
   article_modified_time?: string;
-  twitter_card?: string;
 }
 
 /** WordPress site info from the REST API index (/wp-json/) */
@@ -242,7 +228,6 @@ export interface WPPost {
   slug: string;
   date: string;
   title: { rendered: string };
-  excerpt?: { rendered: string };
   content?: { rendered: string };
   categories: number[];
   acf: { intro: string; must_read: boolean; banner_image?: WPImage | false | null };
@@ -273,7 +258,6 @@ export interface WPWebinar {
   date: string;
   title: { rendered: string };
   content?: { rendered: string };
-  excerpt?: { rendered: string };
   acf: WebinarAcf;
   yoast_head_json?: YoastHead;
   _embedded?: { "wp:featuredmedia"?: WPMediaEmbed[] };

@@ -18,7 +18,12 @@ export function CmsLink({
   const content = children ?? link.title;
   if (isExternal(href) || link.target === "_blank") {
     return (
-      <a href={href} target={link.target || undefined} rel={link.target === "_blank" ? "noopener noreferrer" : undefined} className={className}>
+      <a
+        href={href}
+        target={link.target || undefined}
+        rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
+        className={className}
+      >
         {content}
       </a>
     );

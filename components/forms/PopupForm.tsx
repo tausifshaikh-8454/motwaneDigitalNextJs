@@ -1,17 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { buildSchema, FORM_FIELDS, type FormType } from "@/lib/forms";
-import { submitForm } from "@/lib/submitForm";
+import { FORM_FIELDS, type FormType } from "@/lib/forms";
+import { FormStatus, Honeypot, useCmsForm } from "./useCmsForm";
 
 /** Form used inside the Get in Touch / Request Brochure / Request Recap popups. */
 export function PopupForm({
   formType,
   intro,
   successMessage,
-  hidden = {},
+  hidden,
   downloadUrl,
 }: {
   formType: FormType;
@@ -20,35 +17,23 @@ export function PopupForm({
   hidden?: Record<string, string>;
   downloadUrl?: string;
 }) {
-  const fields = FORM_FIELDS[formType];
-  const [honeypot, setHoneypot] = useState("");
-  const [status, setStatus] = useState<{ ok: boolean; message: string } | null>(null);
+  const { form, onSubmit, status, honeypot } = useCmsForm(formType, {
+    successMessage,
+    extra: hidden,
+    onSuccess: () => {
+      if (downloadUrl) window.open(downloadUrl, "_blank", "noopener");
+    },
+  });
   const {
     register,
-    handleSubmit,
-    setError,
-    reset,
     formState: { errors, isSubmitting },
-  } = useForm<Record<string, string>>({ resolver: zodResolver(buildSchema(formType)) as never });
-
-  const onSubmit = handleSubmit(async (values) => {
-    setStatus(null);
-    const result = await submitForm(formType, { ...values, ...hidden }, honeypot);
-    if (result.fieldErrors) {
-      for (const [name, message] of Object.entries(result.fieldErrors)) setError(name, { message });
-    }
-    setStatus({ ok: result.ok, message: result.ok ? successMessage || result.message : result.message });
-    if (result.ok) {
-      reset();
-      if (downloadUrl) window.open(downloadUrl, "_blank", "noopener");
-    }
-  });
+  } = form;
 
   return (
     <>
       {intro && <p className="mb-8 leading-[1.45] text-ink">{intro}</p>}
       <form onSubmit={onSubmit} noValidate className="space-y-5 bg-form p-5">
-        {fields.map((f) => {
+        {FORM_FIELDS[formType].map((f) => {
           const id = `${formType}-${f.name}`;
           const err = errors[f.name]?.message;
           return (
@@ -80,17 +65,7 @@ export function PopupForm({
             </div>
           );
         })}
-        {/* Honeypot: hidden from people, bots fill it in */}
-        <input
-          type="text"
-          name="website"
-          value={honeypot}
-          onChange={(e) => setHoneypot(e.target.value)}
-          tabIndex={-1}
-          autoComplete="off"
-          aria-hidden="true"
-          className="absolute -left-[9999px] h-0 w-0 opacity-0"
-        />
+        <Honeypot {...honeypot} />
         <button
           type="submit"
           disabled={isSubmitting}
@@ -98,11 +73,7 @@ export function PopupForm({
         >
           {isSubmitting ? "Submitting…" : "Submit"}
         </button>
-        {status?.message && (
-          <p role="status" className={`text-sm ${status.ok ? "text-green-700" : "text-red-600"}`}>
-            {status.message}
-          </p>
-        )}
+        <FormStatus status={status} />
       </form>
     </>
   );

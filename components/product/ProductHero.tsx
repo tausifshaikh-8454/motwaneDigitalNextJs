@@ -31,15 +31,29 @@ export function ProductHero({
     <section className="bg-[linear-gradient(rgba(245,252,255,0.4)_0px,#d7e9f2_100%)]">
       <div className="container-site grid items-center gap-10 pb-[70px] pt-[50px] md:grid-cols-2 lg:pb-[100px] lg:pt-[70px]">
         <div>
-          {title && <h1 className="text-[28px] font-bold leading-[1.4] text-ink lg:text-h1">{title}</h1>}
-          {subtitle && <p className="mt-2 text-lg font-medium leading-[1.4] text-primary lg:text-xl">{subtitle}</p>}
-          {text && <p className="mt-2 text-base leading-[1.4] text-ink lg:text-lg">{text}</p>}
+          {title && (
+            <h1 className="text-[28px] font-bold leading-[1.4] text-ink lg:text-h1">
+              {title}
+            </h1>
+          )}
+          {subtitle && (
+            <p className="mt-2 text-lg font-medium leading-[1.4] text-primary lg:text-xl">
+              {subtitle}
+            </p>
+          )}
+          {text && (
+            <p className="mt-2 text-base leading-[1.4] text-ink lg:text-lg">
+              {text}
+            </p>
+          )}
           {(brochureLabel || contactLabel) && (
             <div className="mt-8 flex flex-wrap gap-4 lg:mt-[50px] lg:gap-5">
               {brochureLabel && (
                 <button
                   type="button"
-                  onClick={() => open({ type: "brochure", productName, brochureUrl })}
+                  onClick={() =>
+                    open({ type: "brochure", productName, brochureUrl })
+                  }
                   className={`${btn} bg-accent hover:border-primary hover:bg-primary hover:text-white`}
                 >
                   {brochureLabel}

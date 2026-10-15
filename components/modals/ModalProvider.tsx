@@ -5,7 +5,7 @@ import type { GlobalSettings } from "@/types/wp";
 import { Drawer } from "./Drawer";
 import { PopupForm } from "@/components/forms/PopupForm";
 
-export type ModalRequest =
+type ModalRequest =
   | { type: "get_in_touch" }
   | { type: "brochure"; productName?: string; brochureUrl?: string }
   | { type: "recap"; webinarTitle?: string };

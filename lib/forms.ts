@@ -14,7 +14,7 @@ export type FormType =
   | "product_enquiry"
   | "job_application";
 
-export interface FieldDef {
+interface FieldDef {
   name: string;
   label: string;
   type: "text" | "email" | "tel" | "textarea" | "file";
@@ -77,8 +77,8 @@ export const FORM_FIELDS: Record<FormType, FieldDef[]> = {
 };
 
 /** Resume upload rules (must match the CF7 tag: limit:5mb filetypes:pdf|doc|docx). */
-export const RESUME_MAX_BYTES = 5 * 1024 * 1024;
-export const RESUME_EXTENSIONS = ["pdf", "doc", "docx"];
+const RESUME_MAX_BYTES = 5 * 1024 * 1024;
+const RESUME_EXTENSIONS = ["pdf", "doc", "docx"];
 
 export function resumeError(file: File | null | undefined): string | null {
   if (!file || !file.size) return "Please upload your resume.";
@@ -89,7 +89,7 @@ export function resumeError(file: File | null | undefined): string | null {
 }
 
 /** Hidden fields each form may carry (context such as the product or webinar). */
-export const HIDDEN_FIELDS: Partial<Record<FormType, string[]>> = {
+const HIDDEN_FIELDS: Partial<Record<FormType, string[]>> = {
   brochure: ["product-name"],
   recap: ["webinar-title"],
   product_enquiry: ["product-name"],

@@ -15,11 +15,9 @@ export async function loadBlogListing(page: number, categorySlug: string | null)
   return {
     settings,
     categories,
-    category,
     mustRead: all.filter((p) => p.acf?.must_read),
     posts,
     totalPages,
-    perPage,
   };
 }
 

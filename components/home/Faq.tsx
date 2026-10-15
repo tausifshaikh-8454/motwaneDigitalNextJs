@@ -1,22 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { LongArrowRight } from "@/components/ui/Icons";
 import type { HomeAcf } from "@/types/wp";
 
 type Item = NonNullable<HomeAcf["faqs"]>[number];
-
-function Arrow({ open }: { open: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 27 15"
-      className={`h-[15px] w-[27px] shrink-0 text-primary transition-transform duration-300 ${open ? "rotate-90" : ""}`}
-      fill="none"
-      aria-hidden="true"
-    >
-      <path d="M1 6.5a1 1 0 1 0 0 2v-2Zm25.7 1.7a1 1 0 0 0 0-1.4L20.3.4a1 1 0 1 0-1.4 1.4l5.6 5.7-5.6 5.6a1 1 0 0 0 1.4 1.4l6.4-6.3ZM1 8.5h25v-2H1v2Z" fill="currentColor" />
-    </svg>
-  );
-}
 
 /** Two-column FAQ accordion; one answer open at a time. */
 export function Faq({ items }: { items: Item[] }) {
@@ -42,7 +30,9 @@ export function Faq({ items }: { items: Item[] }) {
                   className="flex w-full items-center justify-between gap-5 py-[18px] md:gap-12 pr-2.5 text-left leading-[1.65] text-[#1f2124] transition-colors hover:text-primary"
                 >
                   <span>{item.question}</span>
-                  <Arrow open={isOpen} />
+                  <LongArrowRight
+                    className={`h-[15px] w-[27px] shrink-0 text-primary transition-transform duration-300 ${isOpen ? "rotate-90" : ""}`}
+                  />
                 </button>
                 <div
                   id={panelId}

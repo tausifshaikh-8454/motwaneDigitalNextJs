@@ -1,5 +1,4 @@
 import type { WPWebinar } from "@/types/wp";
-import { decodeEntities } from "./links";
 
 /** "2026-06-19" → "Jun 19, 2026" (same format as the old site). */
 export function formatWebinarDate(ymd: string | undefined | null): string {
@@ -14,18 +13,6 @@ export function formatWebinarDate(ymd: string | undefined | null): string {
 export function webinarIsoDate(ymd: string | undefined | null): string | undefined {
   const m = ymd ? /^(\d{4})-?(\d{2})-?(\d{2})/.exec(ymd) : null;
   return m ? `${m[1]}-${m[2]}-${m[3]}` : undefined;
-}
-
-/** Card image = WordPress Featured Image. */
-export function webinarCardImage(w: WPWebinar) {
-  const m = w._embedded?.["wp:featuredmedia"]?.[0];
-  if (!m?.source_url) return null;
-  return {
-    url: m.source_url,
-    alt: m.alt_text || decodeEntities(w.title.rendered),
-    width: m.media_details?.width ?? 800,
-    height: m.media_details?.height ?? 600,
-  };
 }
 
 export function isUpcoming(w: WPWebinar) {

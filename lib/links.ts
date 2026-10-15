@@ -4,7 +4,7 @@
  */
 export function toHref(url: string | undefined | null): string {
   if (!url) return "#";
-  const wpBase = process.env.WP_BASE_URL ?? process.env.NEXT_PUBLIC_WP_BASE_URL;
+  const wpBase = process.env.WP_BASE_URL;
   if (wpBase && url.startsWith(wpBase)) {
     const path = url.slice(wpBase.length) || "/";
     return path.startsWith("/") ? path : `/${path}`;

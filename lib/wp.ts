@@ -281,7 +281,7 @@ export async function getSiteInfo(): Promise<WPSiteInfo | null> {
   }
 }
 
-export interface SitemapItem {
+interface SitemapItem {
   path: string;
   /** Last change in UTC (WordPress "modified_gmt") */
   modified?: string;

@@ -15,6 +15,16 @@ export const ArrowRight = (p: P) => (
   </svg>
 );
 
+/** Long thin arrow used on "Learn More" links, FAQ toggles and the About page. */
+export const LongArrowRight = (p: P) => (
+  <svg viewBox="0 0 27 16" fill="none" aria-hidden="true" {...p}>
+    <path
+      d="M1 7a1 1 0 0 0 0 2V7Zm25.707 1.707a1 1 0 0 0 0-1.414L20.343.929a1 1 0 1 0-1.414 1.414L24.586 8l-5.657 5.657a1 1 0 0 0 1.414 1.414l6.364-6.364ZM1 8v1h25V7H1v1Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
 export const CloseIcon = (p: P) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true" {...p}>
     <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />

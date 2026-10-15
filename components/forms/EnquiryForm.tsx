@@ -1,31 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { buildSchema, FORM_FIELDS } from "@/lib/forms";
-import { submitForm } from "@/lib/submitForm";
+import { FORM_FIELDS } from "@/lib/forms";
+import { FormStatus, Honeypot, useCmsForm } from "./useCmsForm";
 
 /** Inline "Get In Touch" form at the bottom of product pages (placeholder-style fields). */
 export function EnquiryForm({ productName, successMessage }: { productName: string; successMessage?: string }) {
   const fields = FORM_FIELDS.product_enquiry;
-  const [honeypot, setHoneypot] = useState("");
-  const [status, setStatus] = useState<{ ok: boolean; message: string } | null>(null);
+  const { form, onSubmit, status, honeypot } = useCmsForm("product_enquiry", {
+    successMessage,
+    extra: { "product-name": productName },
+  });
   const {
     register,
-    handleSubmit,
-    setError,
-    reset,
     formState: { errors, isSubmitting },
-  } = useForm<Record<string, string>>({ resolver: zodResolver(buildSchema("product_enquiry")) as never });
-
-  const onSubmit = handleSubmit(async (values) => {
-    setStatus(null);
-    const r = await submitForm("product_enquiry", { ...values, "product-name": productName }, honeypot);
-    if (r.fieldErrors) for (const [name, message] of Object.entries(r.fieldErrors)) setError(name, { message });
-    setStatus({ ok: r.ok, message: r.ok ? successMessage || r.message : r.message });
-    if (r.ok) reset();
-  });
+  } = form;
 
   const input =
     "w-full border-b border-primary bg-[#3d89c2] px-[18px] py-3 text-white outline-none placeholder:text-white focus:border-white";
@@ -62,15 +50,7 @@ export function EnquiryForm({ productName, successMessage }: { productName: stri
           </div>
         );
       })}
-      <input
-        type="text"
-        value={honeypot}
-        onChange={(e) => setHoneypot(e.target.value)}
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden="true"
-        className="absolute -left-[9999px] h-0 w-0 opacity-0"
-      />
+      <Honeypot {...honeypot} />
       <div className="sm:col-span-2">
         <button
           type="submit"
@@ -79,11 +59,7 @@ export function EnquiryForm({ productName, successMessage }: { productName: stri
         >
           {isSubmitting ? "Submitting…" : "Submit"}
         </button>
-        {status?.message && (
-          <p role="status" className={`mt-3 text-sm ${status.ok ? "text-white" : "text-accent"}`}>
-            {status.message}
-          </p>
-        )}
+        <FormStatus status={status} className="mt-3 text-sm" okClassName="text-white" errorClassName="text-accent" />
       </div>
     </form>
   );

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight } from "@/components/ui/Icons";
 import { submitForm } from "@/lib/submitForm";
+import { FormStatus, Honeypot } from "./useCmsForm";
 
 export function NewsletterForm({ placeholder, successMessage }: { placeholder: string; successMessage?: string }) {
   const [email, setEmail] = useState("");
@@ -34,15 +35,7 @@ export function NewsletterForm({ placeholder, successMessage }: { placeholder: s
         placeholder={placeholder}
         className="w-full border-b border-primary bg-transparent py-2.5 pr-10 text-field outline-none placeholder:text-field/70"
       />
-      <input
-        type="text"
-        value={honeypot}
-        onChange={(e) => setHoneypot(e.target.value)}
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden="true"
-        className="absolute -left-[9999px] h-0 w-0 opacity-0"
-      />
+      <Honeypot value={honeypot} onChange={setHoneypot} />
       <button
         type="submit"
         disabled={busy}
@@ -51,11 +44,7 @@ export function NewsletterForm({ placeholder, successMessage }: { placeholder: s
       >
         <ArrowRight className="h-6 w-6" />
       </button>
-      {status?.message && (
-        <p role="status" className={`mt-2 text-xs ${status.ok ? "text-green-700" : "text-red-600"}`}>
-          {status.message}
-        </p>
-      )}
+      <FormStatus status={status} className="mt-2 text-xs" />
     </form>
   );
 }

@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { buildSchema, FORM_FIELDS, resumeError } from "@/lib/forms";
+import { FORM_FIELDS, resumeError } from "@/lib/forms";
 import { submitFormWithFile } from "@/lib/submitForm";
+import { FormStatus, Honeypot, useCmsForm } from "@/components/forms/useCmsForm";
 
 /** Fields that take half a row on tablet/desktop (as on the old site). */
 const HALF = new Set(["experience", "resume-file"]);
@@ -16,54 +15,42 @@ const HALF = new Set(["experience", "resume-file"]);
  */
 export function ApplyForm({ submitLabel, successMessage }: { submitLabel: string; successMessage?: string }) {
   const fields = FORM_FIELDS.job_application;
-  const [honeypot, setHoneypot] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
-  const [status, setStatus] = useState<{ ok: boolean; message: string } | null>(null);
   const [fileKey, setFileKey] = useState(0);
+  const { form, onSubmit, status, honeypot } = useCmsForm("job_application", {
+    successMessage,
+    send: async (values, hp) => {
+      const err = resumeError(file);
+      setFileError(err);
+      if (err || !file) return null;
+      return submitFormWithFile("job_application", values, { "resume-file": file }, hp);
+    },
+    onSuccess: () => {
+      setFile(null);
+      setFileKey((k) => k + 1); // remounts the file input to clear it
+    },
+    onInvalid: () => setFileError(resumeError(file)),
+  });
   const {
     register,
-    handleSubmit,
-    setError,
     setValue,
-    reset,
+    clearErrors,
     formState: { errors, isSubmitting },
-  } = useForm<Record<string, string>>({ resolver: zodResolver(buildSchema("job_application")) as never });
+  } = form;
 
   useEffect(() => {
     const poi = new URLSearchParams(window.location.search).get("poi");
     if (poi) setValue("poi", poi);
   }, [setValue]);
 
-  const onSubmit = handleSubmit(
-    async (values) => {
-      setStatus(null);
-      const err = resumeError(file);
-      setFileError(err);
-      if (err || !file) return;
-      const result = await submitFormWithFile("job_application", values, { "resume-file": file }, honeypot);
-      if (result.fieldErrors) {
-        for (const [name, message] of Object.entries(result.fieldErrors)) {
-          if (name === "resume-file") setFileError(message);
-          else setError(name, { message });
-        }
-      }
-      setStatus({ ok: result.ok, message: result.ok ? successMessage || result.message : result.message });
-      if (result.ok) {
-        reset();
-        setFile(null);
-        setFileKey((k) => k + 1); // remounts the file input to clear it
-      }
-    },
-    () => setFileError(resumeError(file)),
-  );
-
   return (
     <form onSubmit={onSubmit} noValidate className="mx-auto mt-[52px] max-w-[840px]">
       <div className="grid gap-y-[22px] md:grid-cols-6 md:gap-x-[30px]">
         {fields.map((f) => {
           const id = `apply-${f.name}`;
-          const err = f.type === "file" ? fileError : errors[f.name]?.message;
+          // Resume errors come from the browser check or from the server (via the form errors).
+          const err = (f.type === "file" && fileError) || errors[f.name]?.message;
           const span = f.type === "textarea" ? "md:col-span-6" : HALF.has(f.name) ? "md:col-span-3" : "md:col-span-2";
           return (
             <div key={f.name} className={span}>
@@ -89,6 +76,7 @@ export function ApplyForm({ submitLabel, successMessage }: { submitLabel: string
                     const picked = e.target.files?.[0] ?? null;
                     setFile(picked);
                     setFileError(picked ? resumeError(picked) : null);
+                    clearErrors("resume-file");
                   }}
                   className="mt-[5px] block w-full border-b border-primary bg-[#fafafa] text-sm text-field file:mr-2 file:cursor-pointer file:border file:border-[#767676] file:bg-[#efefef] file:px-1.5 file:py-0.5 file:text-sm"
                 />
@@ -108,17 +96,7 @@ export function ApplyForm({ submitLabel, successMessage }: { submitLabel: string
         })}
       </div>
 
-      {/* Honeypot: hidden from people, bots fill it in */}
-      <input
-        type="text"
-        name="website"
-        value={honeypot}
-        onChange={(e) => setHoneypot(e.target.value)}
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden="true"
-        className="absolute -left-[9999px] h-0 w-0 opacity-0"
-      />
+      <Honeypot {...honeypot} />
 
       <div className="mt-[25px] flex flex-col items-end gap-3">
         <button
@@ -128,11 +106,7 @@ export function ApplyForm({ submitLabel, successMessage }: { submitLabel: string
         >
           {isSubmitting ? "Submitting…" : submitLabel || "Submit"}
         </button>
-        {status?.message && (
-          <p role="status" className={`self-stretch text-right text-sm ${status.ok ? "text-green-700" : "text-red-600"}`}>
-            {status.message}
-          </p>
-        )}
+        <FormStatus status={status} className="self-stretch text-right text-sm" />
       </div>
     </form>
   );

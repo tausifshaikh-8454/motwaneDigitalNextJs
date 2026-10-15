@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ImageTextSection } from "@/components/about/ImageTextSection";
 import { CmsLink } from "@/components/ui/CmsLink";
+import { LongArrowRight } from "@/components/ui/Icons";
 import { WpImage } from "@/components/ui/WpImage";
 import { getPageBySlug } from "@/lib/wp";
 import { yoastToMetadata } from "@/lib/seo";
@@ -9,17 +10,6 @@ import type { AboutAcf } from "@/types/wp";
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPageBySlug("about-us");
   return yoastToMetadata(page?.yoast_head_json, "About Us", "/about-us/");
-}
-
-function Arrow() {
-  return (
-    <svg viewBox="0 0 27 16" className="h-4 w-[22px]" fill="none" aria-hidden="true">
-      <path
-        d="M1 7a1 1 0 0 0 0 2V7Zm25.707 1.707a1 1 0 0 0 0-1.414L20.343.929a1 1 0 1 0-1.414 1.414L24.586 8l-5.657 5.657a1 1 0 0 0 1.414 1.414l6.364-6.364ZM1 8v1h25V7H1v1Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
 }
 
 /** About Us page — all content comes from the WordPress page "about-us". */
@@ -67,7 +57,7 @@ export default async function AboutPage() {
             className="mt-9 inline-flex items-center gap-2.5 text-lg font-medium leading-[1.4] text-primary transition-[gap] hover:gap-4 md:text-[22px] lg:mt-[45px] lg:text-lg"
           >
             {acf.story_link.title}
-            <Arrow />
+            <LongArrowRight className="h-4 w-[22px]" />
           </CmsLink>
         )}
       </ImageTextSection>
