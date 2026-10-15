@@ -1,5 +1,7 @@
 import "server-only";
+import { cacheLife, cacheTag } from "next/cache";
 import sanitizeHtml from "sanitize-html";
+import { WP_CACHE_TAG } from "@/lib/wp";
 
 /**
  * Cleans HTML that comes from WordPress before it is put on the page.
@@ -46,6 +48,15 @@ const OPTIONS: sanitizeHtml.IOptions = {
   },
 };
 
-export function sanitizeWpHtml(html: string | null | undefined): string {
+/**
+ * Cached ("use cache"): the result is stored with the WordPress content, so each
+ * piece of HTML is cleaned once, not on every request. It also has to be cached:
+ * sanitize-html's CSS parser generates random ids internally, which Next.js
+ * doesn't allow while prerendering outside a cache.
+ */
+export async function sanitizeWpHtml(html: string | null | undefined): Promise<string> {
+  "use cache";
+  cacheLife("wordpress");
+  cacheTag(WP_CACHE_TAG);
   return html ? sanitizeHtml(html, OPTIONS) : "";
 }

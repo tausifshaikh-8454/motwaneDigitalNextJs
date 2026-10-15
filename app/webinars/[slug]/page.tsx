@@ -65,6 +65,7 @@ async function Webinar({ params }: Pick<PageProps<"/webinars/[slug]">, "params">
   const others = all.filter((w) => w.id !== webinar.id);
   const date = formatWebinarDate(acf.webinar_date);
   const cta = settings?.cta_image || null;
+  const overview = await sanitizeWpHtml(internalizeLinks(webinar.content?.rendered ?? ""));
 
   return (
     <>
@@ -82,7 +83,7 @@ async function Webinar({ params }: Pick<PageProps<"/webinars/[slug]">, "params">
             {settings?.overview_label && <h2 className={h2}>{settings.overview_label}</h2>}
             <div
               className="mt-5 leading-[1.4] text-ink [&_a]:text-primary hover:[&_a]:underline [&_li]:mb-2 [&_p]:mb-7 [&_ul]:mb-7 [&_ul]:list-disc [&_ul]:pl-5"
-              dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(internalizeLinks(webinar.content.rendered)) }}
+              dangerouslySetInnerHTML={{ __html: overview }}
             />
           </section>
         )}

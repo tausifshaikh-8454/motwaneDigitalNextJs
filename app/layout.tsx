@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
@@ -12,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const site = await getSiteInfo();
   const icon = site?.site_icon_url;
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+    metadataBase: new URL(SITE_URL),
     title: site?.name,
     description: site?.description || undefined,
     icons: icon ? { icon: [{ url: icon }], apple: [{ url: icon }] } : undefined,

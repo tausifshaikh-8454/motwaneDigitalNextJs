@@ -21,6 +21,7 @@ const contentStyles = [
 export async function LegalPage({ slug }: { slug: string }) {
   const page = await getPageBySlug(slug);
   if (!page) notFound();
+  const html = await sanitizeWpHtml(internalizeLinks(page.content?.rendered ?? ""));
   return (
     <article className="container-site pb-0 pt-[50px]">
       <h1 className="text-center text-2xl font-bold leading-[1.4] text-primary lg:text-h1">
@@ -28,7 +29,7 @@ export async function LegalPage({ slug }: { slug: string }) {
       </h1>
       <div
         className={`mt-5 lg:px-5 ${contentStyles}`}
-        dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(internalizeLinks(page.content?.rendered ?? "")) }}
+        dangerouslySetInnerHTML={{ __html: html }}
       />
     </article>
   );

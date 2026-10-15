@@ -1,4 +1,5 @@
 import axios from "axios";
+import { SITE_URL } from "@/lib/site";
 import { z } from "zod";
 import { getContactSettings, getGlobalSettings, getPageBySlug, wp } from "@/lib/wp";
 import { buildSchema, FORM_TYPES, resumeError, type FormType } from "@/lib/forms";
@@ -68,11 +69,7 @@ function isSameSite(request: Request) {
   const allowed = new Set<string>();
   const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
   if (host) allowed.add(host);
-  try {
-    if (process.env.NEXT_PUBLIC_SITE_URL) allowed.add(new URL(process.env.NEXT_PUBLIC_SITE_URL).host);
-  } catch {
-    /* ignore a malformed env value */
-  }
+  allowed.add(new URL(SITE_URL).host);
   return allowed.has(sourceHost);
 }
 

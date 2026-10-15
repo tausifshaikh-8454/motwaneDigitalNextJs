@@ -65,6 +65,9 @@ export default async function HomePage() {
   if (!page) notFound();
   const acf = page.acf;
   const byId = new Map(products.map((p) => [p.id, p]));
+  const faqs = await Promise.all(
+    (acf.faqs ?? []).map(async (f) => ({ question: f.question, answer: await sanitizeWpHtml(f.answer) })),
+  );
   const offerings = (acf.offerings_products || [])
     .map((ref) => byId.get(ref.ID))
     .filter((p): p is WPProduct => !!p);
@@ -82,10 +85,10 @@ export default async function HomePage() {
       <Features eyebrow={acf.features_eyebrow} heading={acf.features_heading} items={acf.features ?? []} />
       <About data={acf} />
       <Highlights eyebrow={acf.highlights_eyebrow} heading={acf.highlights_heading} items={acf.highlights ?? []} />
-      {!!acf.faqs?.length && (
+      {!!faqs.length && (
         <section className="container-site py-[70px]">
           <SectionHeading eyebrow={acf.faq_eyebrow} heading={acf.faq_heading} />
-          <Faq items={acf.faqs.map((f) => ({ question: f.question, answer: sanitizeWpHtml(f.answer) }))} />
+          <Faq items={faqs} />
         </section>
       )}
     </>

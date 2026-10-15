@@ -7,7 +7,7 @@ import type { WPImage } from "@/types/wp";
  * Image on the left, eyebrow + heading + text on the right
  * (About "Our Story" and Careers "Our Ethics").
  */
-export function ImageTextSection({
+export async function ImageTextSection({
   image,
   imageAlt,
   eyebrow,
@@ -34,6 +34,7 @@ export function ImageTextSection({
   textClassName: string;
   className?: string;
 }) {
+  const heading = headingHtml ? await sanitizeWpHtml(headingHtml) : "";
   return (
     <section className={`container-site ${className}`}>
       <div className={`grid items-center gap-y-10 md:gap-y-0 ${gridClassName}`}>
@@ -52,10 +53,10 @@ export function ImageTextSection({
           {eyebrow && (
             <p className="text-xl font-medium uppercase leading-[1.4] text-primary md:text-[22px] lg:text-eyebrow">{eyebrow}</p>
           )}
-          {headingHtml && (
+          {heading && (
             <h2
               className={`mt-2.5 font-bold leading-[1.4] text-ink ${headingClassName}`}
-              dangerouslySetInnerHTML={{ __html: sanitizeWpHtml(headingHtml) }}
+              dangerouslySetInnerHTML={{ __html: heading }}
             />
           )}
           {text && <p className={`mt-2.5 leading-[1.4] text-ink ${textClassName}`}>{text}</p>}
